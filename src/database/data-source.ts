@@ -8,6 +8,9 @@ export default new DataSource({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    entities: [__dirname + '/src/**/*.entity.{js,ts}'],
-    migrations: [__dirname + '/src/database/migrations/*.{js,ts}'],
-})
+    entities: ['/*/**/*.entity.{js,ts}'],
+    migrations: ['/*/database/migrations/*.{js,ts}'],
+});
+
+
+
