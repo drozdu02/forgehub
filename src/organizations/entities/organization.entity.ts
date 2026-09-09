@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { OrganizationMember } from "./organization-member.entity.js";
+import { Project } from "../../projects/entities/project.entity.js";
 
 @Entity('organizations')
 export class Organization {
@@ -23,4 +24,13 @@ export class Organization {
         (organizationMember) => organizationMember.organization,
     )
     members: OrganizationMember[];
+
+    @OneToMany(
+        () => Project,
+        (project) => project.organization,
+        {
+            onDelete: 'CASCADE'
+        }
+    )
+    projects: Project[];
 }

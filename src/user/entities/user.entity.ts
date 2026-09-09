@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { OrganizationMember } from "../../organizations/entities/organization-member.entity.js";
+import { Task } from "../../tasks/entities/task.entity.js";
 
 @Entity('users')
 export class User {
@@ -9,9 +10,14 @@ export class User {
     @OneToMany(
         () => OrganizationMember,
         organizationMember => organizationMember.user,
-        { cascade: true }
     )
     memberships: OrganizationMember[];
+
+    @OneToMany(
+        () => Task,
+        (task) => task.assignee
+    )
+    tasks: Task[];
 
     @Column()
     name: string;

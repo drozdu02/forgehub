@@ -43,7 +43,7 @@ export class OrganizationsService {
                 });
                 await manager.save(memberShip);
                 return savedOrganization;
-            }
-        )
+            },
+        );
     }
 }
