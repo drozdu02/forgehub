@@ -4,6 +4,7 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { UserModule } from './user/user.module.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { OrganizationsModule } from './organizations/organizations.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -18,7 +19,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       database: 'forgehubdb',
       autoLoadEntities: true,
       synchronize: true,
-    }), UserModule
+    }), UserModule, OrganizationsModule
   ],
   controllers: [AppController],
   providers: [AppService],
