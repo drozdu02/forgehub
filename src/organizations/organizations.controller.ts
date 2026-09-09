@@ -7,7 +7,7 @@ export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
 
   @Post(':userId')
-  async createOrganization(
+  createOrganization(
     @Query('userId', ParseIntPipe) userId: number,
     @Body() createOrganizationDto: CreateOrganizationDto
   ) {
