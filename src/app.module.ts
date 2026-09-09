@@ -18,7 +18,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       password: 'forgehub',
       database: 'forgehubdb',
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
     }), UserModule, OrganizationsModule
   ],
   controllers: [AppController],
