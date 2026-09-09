@@ -6,12 +6,6 @@ export class Organization {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToMany(
-        () => OrganizationMember,
-        (organizationMember) => organizationMember.organization,
-    )
-    members: OrganizationMember[];
-
     @Column({ length: 100})
     name: string;
 
@@ -23,4 +17,10 @@ export class Organization {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @OneToMany(
+        () => OrganizationMember,
+        (organizationMember) => organizationMember.organization,
+    )
+    members: OrganizationMember[];
 }
