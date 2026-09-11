@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import type { Relation } from "typeorm";
 import { OrganizationMember } from "../../organizations/entities/organization-member.entity.js";
 import { Task } from "../../tasks/entities/task.entity.js";
 
@@ -11,13 +12,13 @@ export class User {
         () => OrganizationMember,
         organizationMember => organizationMember.user,
     )
-    memberships: OrganizationMember[];
+    memberships: Relation<OrganizationMember[]>;
 
     @OneToMany(
         () => Task,
         (task) => task.assignee
     )
-    tasks: Task[];
+    tasks: Relation<Task[]>;
 
     @Column()
     name: string;

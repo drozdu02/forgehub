@@ -1,17 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Organization } from './entities/organization.entity.js';
 import { CreateOrganizationDto } from './dto/create-organization.dto.js';
-import { DataSource } from 'typeorm/browser';
 import { User } from '../user/entities/user.entity.js';
-import { NotFoundError } from 'rxjs';
 import { OrganizationMember } from './entities/organization-member.entity.js';
 import { OrganizationRole } from './enums/organization-role.enum.js';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class OrganizationsService {
     constructor(
+        @InjectRepository(Organization)
         private readonly organizationRepository: Repository<Organization>,
+        @InjectDataSource()
         private readonly dataSource: DataSource
     ){}
 

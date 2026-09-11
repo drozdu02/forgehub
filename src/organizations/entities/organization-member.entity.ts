@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
+import type { Relation } from "typeorm";
 import { Organization } from "./organization.entity.js";
 import { User } from "../../user/entities/user.entity.js";
 import { OrganizationRole } from "../enums/organization-role.enum.js";
@@ -12,12 +13,12 @@ export class OrganizationMember {
     @ManyToOne(() => User,
     user => user.memberships,
     { onDelete: 'CASCADE' })
-    user: User;
+    user: Relation<User>;
 
     @ManyToOne(() => Organization, 
     organization => organization.members, 
     { onDelete: 'CASCADE' })
-    organization: Organization;
+    organization: Relation<Organization>;
 
     @Column({ type: 'enum', enum: OrganizationRole, default: OrganizationRole.MEMBER })
     role: OrganizationRole;

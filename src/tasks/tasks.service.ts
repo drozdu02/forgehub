@@ -5,9 +5,11 @@ import { CreateTaskDto } from './dto/create-task.dto.js';
 import { UpdateTaskDto } from './dto/update-task.dto.js';
 import { PaginationQueryDto } from './dto/pagination-query.dto.js';
 import { PaginatedResultDto } from './dto/paginated-result.dto.js';
+import { InjectRepository } from '@nestjs/typeorm';
 @Injectable()
 export class TasksService {
     constructor(
+        @InjectRepository(Task)
         private readonly taskRespository: Repository<Task>,
     ){}
 

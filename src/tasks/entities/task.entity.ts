@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import type { Relation } from "typeorm";
 import { TaskStatus } from "../enums/task-status.enum.js";
 import { TaskPriority } from "../enums/task-priority.enum.js";
 import { Project } from "../../projects/entities/project.entity.js";
@@ -37,7 +38,7 @@ export class Task {
             onDelete: 'CASCADE'
         }
     )
-    project: Project;
+    project: Relation<Project>;
 
     @ManyToOne(
         () => User,
@@ -46,5 +47,5 @@ export class Task {
             onDelete: 'SET NULL'
         }
     )
-    assignee: User | null;
+    assignee: Relation<User> | null;
 }

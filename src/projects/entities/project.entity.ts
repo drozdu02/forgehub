@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
+import type { Relation } from "typeorm";
 import { Organization } from "../../organizations/entities/organization.entity.js";
 import { Task } from "../../tasks/entities/task.entity.js";
 
@@ -23,7 +24,7 @@ export class Project {
             onDelete: 'CASCADE'
         }
     )
-    organization: Organization;
+    organization: Relation<Organization>;
 
     @CreateDateColumn()
     createdAt: Date;
@@ -35,7 +36,6 @@ export class Project {
         () => Task,
         (task) => task.project,
     )
-    tasks: Task[];
-
+    tasks: Relation<Task[]>;
 
 }
