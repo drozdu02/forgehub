@@ -7,3 +7,4 @@ export class PaginatedResultDto<T> {
         totalPages: number;
     };
 }
+
