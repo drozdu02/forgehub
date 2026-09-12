@@ -38,18 +38,6 @@ export class ProjectsController {
     );
   }
 
-
-  @Post(':organizationId')
-  createProjectByOrganizationId(
-    @Param('organizationId', ParseIntPipe) organizationId: number,
-    @Body() createProjectDto: CreateProjectDto
-  ): Promise<Project> {
-    return this.projectsService.createProject(
-      organizationId,
-      createProjectDto
-    );
-  }
-
   @Delete(':id')
   deleteProjectById(
     @Param('id', ParseIntPipe) projectId: number

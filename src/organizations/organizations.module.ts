@@ -4,13 +4,15 @@ import { OrganizationsService } from './organizations.service.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Organization } from './entities/organization.entity.js';
 import { OrganizationMember } from './entities/organization-member.entity.js';
+import { ProjectsService } from '../projects/projects.service.js';
+import { Project } from '../projects/entities/project.entity.js';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Organization, OrganizationMember])
+    TypeOrmModule.forFeature([Organization, OrganizationMember, Project])
   ],
   controllers: [OrganizationsController],
-  providers: [OrganizationsService],
+  providers: [OrganizationsService, ProjectsService],
   exports: [OrganizationsService]
 })
 export class OrganizationsModule {}
