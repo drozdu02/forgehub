@@ -1,25 +1,30 @@
-import { IsString, IsNotEmpty, IsOptional, IsISO8601, IsInt, IsEnum, MaxLength } from "class-validator";
+import { IsEnum, IsInt, IsISO8601, IsOptional, IsString, MaxLength } from "class-validator";
 import { TaskPriority } from "../enums/task-priority.enum.js";
+import { TaskStatus } from "../enums/task-status.enum.js";
 
 export class UpdateTaskDto {
+    @IsOptional()
     @IsString()
-        @MaxLength(200)
-        @IsOptional()
-        name?: string;
-    
-        @IsString()
-        @IsOptional()
-        description?: string;
-    
-        @IsOptional()
-        @IsEnum(TaskPriority)
-        taskPriority?: TaskPriority;
-    
-        @IsOptional()
-        @IsISO8601()
-        deadline?: string;
-    
-        @IsOptional()
-        @IsInt()
-        assigneeId?: number;
+    @MaxLength(100)
+    name?: string;
+
+    @IsOptional()
+    @IsString()
+    description?: string;
+
+    @IsOptional()
+    @IsEnum(TaskStatus)
+    taskStatus?: TaskStatus;
+
+    @IsOptional()
+    @IsEnum(TaskPriority)
+    taskPriority?: TaskPriority;
+
+    @IsOptional()
+    @IsISO8601()
+    deadline?: string;
+
+    @IsOptional()
+    @IsInt()
+    assigneeId?: number;
 }

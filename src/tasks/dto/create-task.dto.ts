@@ -3,13 +3,14 @@ import { TaskPriority } from "../enums/task-priority.enum.js";
 
 export class CreateTaskDto {
     @IsString()
-    @MaxLength(200)
     @IsNotEmpty()
+    @MaxLength(100)
     name: string;
 
+    @IsOptional()
     @IsString()
-    @IsNotEmpty()
-    description: string;
+    description?: string;
+    
 
     @IsOptional()
     @IsEnum(TaskPriority)
@@ -22,6 +23,4 @@ export class CreateTaskDto {
     @IsOptional()
     @IsInt()
     assigneeId?: number;
-
-
 }

@@ -1,9 +1,71 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { ProjectsService } from './projects.service.js';
+import { CreateProjectDto } from './dto/create-project.dto.js';
+import { Project } from './entities/project.entity.js';
+import { PaginatedResultDto } from './dto/paginated-result.dto.js';
+import { PaginationQueryDto } from './dto/pagination-query.dto.js';
+import { UpdateProjectDto } from './dto/update-project.dto.js';
 
 @Controller('projects')
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
+
+  @Get()
+  getAllProjects(
+    @Query() paginationQueryDto: PaginationQueryDto
+  ): Promise<PaginatedResultDto<Project>> {
+    return this.projectsService.getAllProjects(
+      paginationQueryDto
+    );
+  }
+
+  @Get(':id')
+  getProjectById(
+    @Query('id', ParseIntPipe) projectId: number
+  ): Promise<Project> {
+    return this.projectsService.getProjectById(projectId);
+  }
+
+  @Get(":organizationId/projects")
+  getProjectsByOrganizationId(
+    @Param('organizationId', ParseIntPipe) organizationId: number,
+    @Query() paginationQueryDto: PaginationQueryDto
+  ): Promise<PaginatedResultDto<Project>> {
+    return this.projectsService.getProjectsByOrganizationId(
+      organizationId,
+      paginationQueryDto
+    );
+  }
+
+
+  @Post(':organizationId')
+  createProjectByOrganizationId(
+    @Param('organizationId', ParseIntPipe) organizationId: number,
+    @Body() createProjectDto: CreateProjectDto
+  ): Promise<Project> {
+    return this.projectsService.createProject(
+      organizationId,
+      createProjectDto
+    );
+  }
+
+  @Delete(':id')
+  deleteProjectById(
+    @Param('id', ParseIntPipe) projectId: number
+  ): Promise<void> {
+    return this.projectsService.deleteProject(projectId);
+  }
+
+  @Patch(':id')
+  updateProjectById(
+    @Param('id', ParseIntPipe) projectId: number,
+    @Body() updateProjectDto: UpdateProjectDto
+  ): Promise<Project> {
+    return this.projectsService.updateProject(
+      projectId,
+      updateProjectDto
+    );
+  }
   
 }
