@@ -20,6 +20,9 @@ export class User {
     )
     tasks: Relation<Task[]>;
 
+    @Column({ name: 'password_hash' })
+    passwordHash: string;
+
     @Column()
     name: string;
 
