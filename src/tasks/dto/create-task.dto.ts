@@ -1,5 +1,6 @@
 import { IsEnum, IsInt, IsISO8601, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
 import { TaskPriority } from "../enums/task-priority.enum.js";
+import { Type } from "class-transformer";
 
 export class CreateTaskDto {
     @IsString()
@@ -22,5 +23,6 @@ export class CreateTaskDto {
 
     @IsOptional()
     @IsInt()
+    @Type(() => Number)
     assigneeId?: number;
 }

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Task } from './entities/task.entity.js';
 import { CreateTaskDto } from './dto/create-task.dto.js';
@@ -6,11 +6,23 @@ import { UpdateTaskDto } from './dto/update-task.dto.js';
 import { PaginationQueryDto } from './dto/pagination-query.dto.js';
 import { PaginatedResultDto } from './dto/paginated-result.dto.js';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Project } from '../projects/entities/project.entity.js';
+import { User } from '../user/entities/user.entity.js';
+import { OrganizationMember } from '../organizations/entities/organization-member.entity.js';
 @Injectable()
 export class TasksService {
     constructor(
         @InjectRepository(Task)
         private readonly taskRespository: Repository<Task>,
+
+        @InjectRepository(Project)
+        private readonly projectRepository: Repository<Project>,
+
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
+
+        @InjectRepository(OrganizationMember)
+        private readonly organizationMemberRepository: Repository<OrganizationMember>
     ){}
 
     async getAllTasks(paginationQueryDto: PaginationQueryDto): Promise<PaginatedResultDto<Task>> {
@@ -34,6 +46,63 @@ export class TasksService {
                 totalPages: Math.ceil(total / limit)
             }
         };
+    }
+
+    async createTask(
+        projectId: number,
+        createTaskDto: CreateTaskDto
+    ): Promise<Task> {
+
+        const project = await this.projectRepository.findOne({
+            where: {
+                id: projectId,
+            },
+            relations: {
+                organization: true
+            },
+        });
+
+        if (!project) {
+            throw new NotFoundException(`Project with id ${projectId} not found`);
+        }
+
+        let assignee : User | null = null;
+
+        if (createTaskDto.assigneeId !== undefined) {
+            assignee = await this.userRepository.findOneBy({
+                id: createTaskDto.assigneeId,
+            });
+        }
+
+        if (!assignee) {
+            throw new NotFoundException(`User with id ${createTaskDto.assigneeId} not found`)
+        }
+
+        const membership = await this.organizationMemberRepository.findOne({
+            where: {
+                user: {
+                    id: assignee.id
+                },
+                organization: {
+                    id: project.organization.id
+                },
+            },
+        });
+
+        if (!membership) {
+            throw new ForbiddenException(`User with id ${createTaskDto.assigneeId} is not a member of this organization`);
+        }
+
+
+        const task = this.taskRespository.create({
+            name: createTaskDto.name,
+            description: createTaskDto.description,
+            taskPriority: createTaskDto.taskPriority,
+            deadline: createTaskDto.deadline ? new Date(createTaskDto.deadline) : null,
+            project: project,
+            assignee: assignee
+        });
+        return this.taskRespository.save(task);
     }
 
     

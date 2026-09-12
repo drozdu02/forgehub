@@ -17,6 +17,18 @@ export class TasksController {
     return this.tasksService.getAllTasks(paginationQueryDto);
   }
 
+  
+  @Post(':id')
+  createTask(
+    @Query(':id', ParseIntPipe) projectId: number,
+    @Body() createTaskDto: CreateTaskDto
+  ): Promise<Task> {
+    return this.tasksService.createTask(
+      projectId,
+      createTaskDto
+    );
+  }
+
 
     
 }
