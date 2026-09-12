@@ -7,7 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrganizationsModule } from './organizations/organizations.module.js';
 import { TasksModule } from './tasks/tasks.module.js';
 import { ProjectsModule } from './projects/projects.module.js';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './auth/auth.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
