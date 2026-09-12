@@ -10,7 +10,7 @@ export class UpdateTaskDto {
 
     @IsOptional()
     @IsString()
-    description?: string;
+    description?: string | null;
 
     @IsOptional()
     @IsEnum(TaskStatus)
@@ -22,9 +22,9 @@ export class UpdateTaskDto {
 
     @IsOptional()
     @IsISO8601()
-    deadline?: string;
+    deadline?: string | null;
 
     @IsOptional()
     @IsInt()
-    assigneeId?: number;
+    assigneeId?: number | null;
 }

@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { Task } from './entities/task.entity.js';
 import { CreateTaskDto } from './dto/create-task.dto.js';
 import { UpdateTaskDto } from './dto/update-task.dto.js';
@@ -30,6 +30,63 @@ export class TasksService {
         const limit = paginationQueryDto.limit ?? 10;
 
         const [data, total] = await this.taskRespository.findAndCount({
+            skip: (page - 1) * limit,
+            take: limit,
+            order: {
+                createdAt: 'ASC'
+            },
+        });
+
+        return {
+            data,
+            meta: {
+                total,
+                page,
+                limit,
+                totalPages: Math.ceil(total / limit)
+            }
+        };
+    }
+
+    async getTaskById(
+        taskId: number
+    ): Promise<Task> {
+        const task = await this.taskRespository.findOneBy({
+            id: taskId
+        });
+
+        if (!task) {
+            throw new NotFoundException(`Task with id ${taskId} not found`);
+        }
+
+        return task;
+    }
+
+    async getTasksByProjectId(
+        projectId: number,
+        paginationQueryDto: PaginationQueryDto
+    ): Promise<PaginatedResultDto<Task>> {
+
+        const project = await this.projectRepository.findOneBy({
+            id: projectId
+        });
+
+        if (!project) {
+            throw new NotFoundException(`Project with id ${projectId} not found`);
+        }
+
+        const page = paginationQueryDto.page ?? 1;
+        const limit = paginationQueryDto.limit ?? 10;
+
+        const [data, total] = await this.taskRespository.findAndCount({
+            where: {
+                project: {
+                    id: projectId
+                },
+            },
+            relations: {
+                assignee: true
+            },
             skip: (page - 1) * limit,
             take: limit,
             order: {
@@ -102,6 +159,86 @@ export class TasksService {
             project: project,
             assignee: assignee
         });
+        return this.taskRespository.save(task);
+    }
+
+    async deleteTaskById(
+        taskId: number
+    ): Promise<void> {
+        const result = await this.taskRespository.delete({
+            id: taskId
+        });
+
+        if (result.affected === 0) {
+            throw new NotFoundException(`Task with id ${taskId} not found`);
+        }
+
+    }
+
+    async updateTaskById(
+        taskId: number,
+        updateTaskDto: UpdateTaskDto
+    ): Promise<Task> {
+        const task = await this.taskRespository.findOne({
+            where: {
+                id: taskId
+            },
+            relations: {
+                project: {
+                    organization: true,
+                },
+            },
+        });
+
+        if (!task) {
+            throw new NotFoundException(`Task with id ${taskId} not found`);
+        }
+
+        if (updateTaskDto.assigneeId !== undefined) {
+            if (updateTaskDto.assigneeId === null) {
+                task.assignee = null;
+            } else {
+                const assignee = await this.userRepository.findOneBy({
+                    id: updateTaskDto.assigneeId
+                });
+
+                if (!assignee) {
+                    throw new NotFoundException(`User with id ${updateTaskDto.assigneeId} not found`);
+                }
+
+                const membership = await this.organizationMemberRepository.findOne({
+                    where: {
+                        user: {
+                            id: assignee.id
+                        },
+                        organization: {
+                            id: task.project.organization.id,
+                        },
+                    },
+                });
+                
+                if (!membership) {
+                    throw new NotFoundException(`User with id ${assignee.id} is not a member of this organization`);
+                }
+                task.assignee = assignee;
+            }
+        }
+
+        if (updateTaskDto.name !== undefined) {
+            task.name = updateTaskDto.name;
+        }
+
+        if (updateTaskDto.description !== undefined) {
+            task.description = updateTaskDto.description;
+        }
+
+        if (updateTaskDto.taskPriority !== undefined) {
+            task.description = updateTaskDto.taskPriority;
+        }
+
+        if (updateTaskDto.deadline !== undefined) {
+            task.deadline = updateTaskDto.deadline ? new Date(updateTaskDto.deadline) : null;
+        }
         return this.taskRespository.save(task);
     }
 
