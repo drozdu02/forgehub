@@ -14,8 +14,8 @@ export class PasswordService {
     }
 
     async verify(
-        password: string,
-        hashedPassword: string
+        hashedPassword: string,
+        password: string
     ): Promise<boolean> {
         return await argon2.verify(
             hashedPassword,

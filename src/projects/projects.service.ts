@@ -6,7 +6,6 @@ import { PaginationQueryDto } from './dto/pagination-query.dto.js';
 import { PaginatedResultDto } from './dto/paginated-result.dto.js';
 import { CreateProjectDto } from './dto/create-project.dto.js';
 import { Organization } from '../organizations/entities/organization.entity.js';
-import { skip } from 'node:test';
 import { UpdateProjectDto } from './dto/update-project.dto.js';
 
 @Injectable()
