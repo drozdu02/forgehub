@@ -7,6 +7,7 @@ import { PasswordService } from './password.service.js';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { StringValue } from 'ms';
+import { JwtStrategy } from './strategies/jwt.strategy.js';
 @Module({
   imports: [
     ConfigModule,
@@ -28,6 +29,6 @@ import { StringValue } from 'ms';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, PasswordService],
+  providers: [AuthService, PasswordService, JwtStrategy],
 })
 export class AuthModule {}
